@@ -124,7 +124,7 @@ function customLabels(code: string): I18nString {
 
 }
 function requestHasBreakdown(r: SummarizeRequestBody): boolean {
-    return r.selectors[0].breakdown !== undefined;
+    return r.options.breakdown !== undefined;
 }
 
 export default class SummaryResult {
