@@ -55,7 +55,9 @@ function dataFromFields(req: SummarizeRequestBody, obj: any) {
 
             let result = siteDat.results.filter((f: any) => f.field === field)[0];
 
-            console.log(33, siteDat)
+            if (result.site === "all") {
+                return null;
+            }
             if (result.measure == "categorical") {
 
                 tmp = {
@@ -64,7 +66,10 @@ function dataFromFields(req: SummarizeRequestBody, obj: any) {
                         { "code": "site", "labels": customLabels("site") },
                         { "code": "total", "labels": customLabels("total") },
                         { "code": "mode", "labels": customLabels("mode") },
-                        { "code": "count", "labels": customLabels("count"), "categories": result.count.map((c: { label: any; }) => ({ "code": c.label })) }
+                        {
+                            "code": "count", "labels": customLabels("count"),
+                            "categories": result.count.map((c: { label: any; }) => ({ "code": c.label }))
+                        }
                     ]
                 };
 
@@ -102,7 +107,7 @@ function dataFromFields(req: SummarizeRequestBody, obj: any) {
                 console.warn("unimplemented measure");
             }
 
-        });
+        }).filter((x: any) => x !== null)
         tmp["data"] = dat
         res.push(tmp);
     }
