@@ -12,17 +12,19 @@ function dataFromBreakdown(req: SummarizeRequestBody, obj: any) {
 
     var breakResult: any[] = []
     if (obj[0][0].breakdown.fieldType == 'dateTime') {
-        breakResult = sortBy(obj[0][0].breakdown.result.map((r: any) => ({ periodStart: (r.periodStart).slice(0, 10), periodCount: r.periodCount })), "periodStart"); //slice dateTime to remove time and only keep the date
+        breakResult = sortBy((obj[0][0].breakdown.result ?? [])
+            .map((r: any) => ({ periodStart: (r.periodStart).slice(0, 10), periodCount: r.periodCount })), "periodStart"); //slice dateTime to remove time and only keep the date
     }
     else {
-        breakResult = sortBy(obj[0][0].breakdown.result.map((r: any) => ({ periodStart: parseFloat(r.periodStart), periodCount: r.periodCount })), "periodStart");
+        breakResult = sortBy((obj[0][0].breakdown.result ?? [])
+            .map((r: any) => ({ periodStart: parseFloat(r.periodStart), periodCount: r.periodCount })), "periodStart");
     }
 
-    let dat = obj.map((o: any) => o[0]).map((siteDat: any) => {
+    let dat = (obj ?? []).map((o: any) => o[0]).map((siteDat: any) => {
         return [
             Sites.convertCode2Name(siteDat.siteCode),
             siteDat.total,
-            siteDat.breakdown.result.map((p: any) => p.periodCount),
+            (siteDat.breakdown.result ?? []).map((p: any) => p.periodCount),
         ];
     });
 
@@ -35,7 +37,7 @@ function dataFromBreakdown(req: SummarizeRequestBody, obj: any) {
                 {
                     "code": "count",
                     "labels": customLabels("count"),
-                    "categories": breakResult.map((r: any) => ({ code: r.periodStart }))
+                    "categories": (breakResult ?? []).map((r: any) => ({ code: r.periodStart }))
                 }
             ],
             "data": dat
@@ -51,7 +53,7 @@ function dataFromFields(req: SummarizeRequestBody, obj: any) {
     for (let field of fields) {
         let tmp: any = null;
 
-        let dat = obj.map((o: any) => o[0]).map((siteDat: any) => {
+        let dat = (obj ?? []).map((o: any) => o[0]).map((siteDat: any) => {
 
             let result = siteDat.results.filter((f: any) => f.field === field)[0];
 
@@ -63,11 +65,14 @@ function dataFromFields(req: SummarizeRequestBody, obj: any) {
                         { "code": "site", "labels": customLabels("site") },
                         { "code": "total", "labels": customLabels("total") },
                         { "code": "mode", "labels": customLabels("mode") },
-                        { "code": "count", "labels": customLabels("count"), "categories": result.count.map((c: { label: any; }) => ({ "code": c.label })) }
+                        {
+                            "code": "count", "labels": customLabels("count"),
+                            "categories": (result.count ?? []).map((c: { label: any; }) => ({ "code": c.label }))
+                        }
                     ]
                 };
 
-                let counts = result.count.map((d: any) => d.value);
+                let counts = (result.count ?? []).map((d: any) => d.value);
 
                 return [
                     Sites.convertCode2Name(siteDat.siteCode),
@@ -91,8 +96,8 @@ function dataFromFields(req: SummarizeRequestBody, obj: any) {
 
                 return [
                     Sites.convertCode2Name(siteDat.siteCode),
-                    result.mean.populationSize,
-                    result.mean.mean,
+                    result.mean?.populationSize,
+                    result.mean?.mean,
                     result.stdev,
                     result.ci95
                 ];
