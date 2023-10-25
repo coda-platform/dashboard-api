@@ -55,6 +55,7 @@ function dataFromFields(req: SummarizeRequestBody, obj: any) {
 
             let result = siteDat.results.filter((f: any) => f.field === field)[0];
 
+            console.log(33, result)
             if (result.measure == "categorical") {
 
                 tmp = {
