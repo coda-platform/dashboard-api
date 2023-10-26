@@ -81,7 +81,7 @@ export class DashPanels {
                 return Promise.reject(new Error(`Invalid Panel ID ${panelId}`));
         }
     }
-
+    /*
     private async computePanel1(): Promise<any> {
         return this.sitesProxy.getCohortSizeOnDate(this.date, this.sitesCode)
             .then((numberInCohort: number) => ({
@@ -190,6 +190,41 @@ export class DashPanels {
     private async computePanel7(): Promise<any> {
         return this.sitesProxy.getActiveIcuOnDate(this.date, this.sitesCode)
             .then(sites => ({ "sites": ObjectFromEntries(sites) }));
+    }
+    */
+    private async computePanel1(): Promise<any> {
+        // FIXME(malavv): Panel logic is not implemented
+        return Promise.resolve(this.mock['p1']);
+    }
+
+    private async computePanel2(): Promise<any> {
+        // FIXME(malavv): Panel logic is not implemented
+        return Promise.resolve(this.mock['p2']);
+    }
+
+    private async computePanel3(): Promise<any> {
+        // FIXME(malavv): Panel logic is not implemented
+        return Promise.resolve(this.mock['p3']);
+    }
+
+    private async computePanel4(): Promise<any> {
+        // FIXME(malavv): Panel logic is not implemented
+        return Promise.resolve(this.mock['p4']);
+    }
+
+    private async computePanel5(): Promise<any> {
+        // FIXME(malavv): Panel logic is not implemented
+        return Promise.resolve(this.mock['p5']);
+    }
+
+    private async computePanel6(): Promise<any> {
+        // FIXME(malavv): Panel logic is not implemented
+        return Promise.resolve(this.mock['p6']);
+    }
+
+    private async computePanel7(): Promise<any> {
+        // FIXME(malavv): Panel logic is not implemented
+        return Promise.resolve(this.mock['p7']);
     }
 
     private async computePanel8(): Promise<any> {
