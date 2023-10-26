@@ -4,8 +4,8 @@
  * @param delayMs Time to wait
  * @private
  */
-export function resolveAfter(payload: any, delayMs: number) : Promise<any> {
-    return new Promise(resolve => {
-        setTimeout(() => resolve(payload), delayMs);
-    });
+export function resolveAfter(payload: any, delayMs: number): Promise<any> {
+  return new Promise((resolve) => {
+    setTimeout(() => resolve(payload), delayMs);
+  });
 }

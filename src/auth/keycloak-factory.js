@@ -1,6 +1,6 @@
-const Keycloak = require('keycloak-connect');
-const session = require('express-session');
-const KeycloakConfig = require('./keycloak-config');
+const Keycloak = require("keycloak-connect");
+const session = require("express-session");
+const KeycloakConfig = require("./keycloak-config");
 
 let keycloak;
 
@@ -9,17 +9,20 @@ function get(app) {
 
   let memoryStore = new session.MemoryStore();
 
-  const sessionSecret = process.env.CODA_DASHBOARD_API_AUTH_SESSION_MEMORY_SECRET
+  const sessionSecret = process.env
+    .CODA_DASHBOARD_API_AUTH_SESSION_MEMORY_SECRET
     ? process.env.CODA_DASHBOARD_API_AUTH_SESSION_MEMORY_SECRET
-    : '';
+    : "";
 
   //session
-  app.use(session({
-    secret: sessionSecret,
-    resave: false,
-    saveUninitialized: true,
-    store: memoryStore
-  }));
+  app.use(
+    session({
+      secret: sessionSecret,
+      resave: false,
+      saveUninitialized: true,
+      store: memoryStore,
+    }),
+  );
 
   keycloak = new Keycloak({ store: memoryStore }, KeycloakConfig);
   return keycloak;

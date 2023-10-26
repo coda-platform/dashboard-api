@@ -1,10 +1,15 @@
-import { Application, Request } from 'express';
-import { format } from 'date-fns';
+import { Application, Request } from "express";
+import { format } from "date-fns";
 import { Sites } from "./Sites";
-import { last, sortBy, zip } from 'underscore';
-import { getCachedFile, getRandomInt, isSetsEquals, ObjectFromEntries } from "../helpers/poly";
+import { last, sortBy, zip } from "underscore";
+import {
+  getCachedFile,
+  getRandomInt,
+  isSetsEquals,
+  ObjectFromEntries,
+} from "../helpers/poly";
 import { resolveAfter } from "../helpers/promises";
-import JSON5 from 'json5';
+import JSON5 from "json5";
 
 /** The request can be asked for real data "real", mocked data "mock", or mocked with added fake latency "lagmock" */
 type QueryModeType = "real" | "mock" | "lagmock";
@@ -15,73 +20,81 @@ const maxJitterMs = 2000;
 export type PerSiteNumber = { [site: string]: number };
 
 export class DashPanels {
-    mock: { [panel: string]: Object };
-    app: Application;
-    sitesProxy: Sites;
-    date: Date;
-    sitesCode: string[];
-    mode: QueryModeType;
+  mock: { [panel: string]: Object };
+  app: Application;
+  sitesProxy: Sites;
+  date: Date;
+  sitesCode: string[];
+  mode: QueryModeType;
 
-    constructor(mockDataPath: string, app: Application, req: Request, date: Date, sitesCode: string[]) {
-        this.mock = JSON5.parse(getCachedFile(req.app, mockDataPath));
-        this.app = app;
-        // NOTE(malavv): The mocked and proxy data, should probably eventually be in the SiteProxy.
-        this.sitesProxy = new Sites(req);
-        this.date = date;
-        this.sitesCode = sitesCode;
-        // @ts-ignore
-        this.mode = req.query.mode || "real"; // Defaults to real query.
-    }
+  constructor(
+    mockDataPath: string,
+    app: Application,
+    req: Request,
+    date: Date,
+    sitesCode: string[],
+  ) {
+    this.mock = JSON5.parse(getCachedFile(req.app, mockDataPath));
+    this.app = app;
+    // NOTE(malavv): The mocked and proxy data, should probably eventually be in the SiteProxy.
+    this.sitesProxy = new Sites(req);
+    this.date = date;
+    this.sitesCode = sitesCode;
+    // @ts-ignore
+    this.mode = req.query.mode || "real"; // Defaults to real query.
+  }
 
-    public getPanelViewModel(panelId: string): Promise<any> {
-        switch (this.mode) {
-            case "real":
-                return this.getOrCompute(panelId + format(this.date, 'yyyy-MM-dd'),
-                    () => this.computePanel(panelId));
-            case "mock":
-                return Promise.resolve(this.mock[panelId]);
-            case "lagmock":
-                return resolveAfter(this.mock[panelId], getRandomInt(1, maxJitterMs));
-            default:
-                return Promise.reject(`Incorrect Query mode : ${this.mode}`);
-        }
+  public getPanelViewModel(panelId: string): Promise<any> {
+    switch (this.mode) {
+      case "real":
+        return this.getOrCompute(
+          panelId + format(this.date, "yyyy-MM-dd"),
+          () => this.computePanel(panelId),
+        );
+      case "mock":
+        return Promise.resolve(this.mock[panelId]);
+      case "lagmock":
+        return resolveAfter(this.mock[panelId], getRandomInt(1, maxJitterMs));
+      default:
+        return Promise.reject(`Incorrect Query mode : ${this.mode}`);
     }
+  }
 
-    private async computePanel(panelId: string): Promise<any> {
-        switch (panelId) {
-            // Line 1
-            case 'p1':
-                return this.computePanel1();
-            case 'p2':
-                return this.computePanel2();
-            case 'p3':
-                return this.computePanel3();
-            // Line 2
-            case 'p4':
-                return this.computePanel4();
-            case 'p5':
-                return this.computePanel5();
-            case 'p6':
-                return this.computePanel6();
-            // line 3
-            case 'p7':
-                return this.computePanel7();
-            case 'p8':
-                return this.computePanel8();
-            case 'p9':
-                return this.computePanel9();
-            case 'p10':
-                return this.computePanel10();
-            case 'p11':
-                return this.computePanel11();
-            case 'p12':
-                return this.computePanel12();
-            // No match
-            default:
-                return Promise.reject(new Error(`Invalid Panel ID ${panelId}`));
-        }
+  private async computePanel(panelId: string): Promise<any> {
+    switch (panelId) {
+      // Line 1
+      case "p1":
+        return this.computePanel1();
+      case "p2":
+        return this.computePanel2();
+      case "p3":
+        return this.computePanel3();
+      // Line 2
+      case "p4":
+        return this.computePanel4();
+      case "p5":
+        return this.computePanel5();
+      case "p6":
+        return this.computePanel6();
+      // line 3
+      case "p7":
+        return this.computePanel7();
+      case "p8":
+        return this.computePanel8();
+      case "p9":
+        return this.computePanel9();
+      case "p10":
+        return this.computePanel10();
+      case "p11":
+        return this.computePanel11();
+      case "p12":
+        return this.computePanel12();
+      // No match
+      default:
+        return Promise.reject(new Error(`Invalid Panel ID ${panelId}`));
     }
-    /*
+  }
+  /*
     private async computePanel1(): Promise<any> {
         return this.sitesProxy.getCohortSizeOnDate(this.date, this.sitesCode)
             .then((numberInCohort: number) => ({
@@ -192,83 +205,81 @@ export class DashPanels {
             .then(sites => ({ "sites": ObjectFromEntries(sites) }));
     }
     */
-    private async computePanel1(): Promise<any> {
-        // FIXME(malavv): Panel logic is not implemented
-        return Promise.resolve(this.mock['p1']);
-    }
+  private async computePanel1(): Promise<any> {
+    // FIXME(malavv): Panel logic is not implemented
+    return Promise.resolve(this.mock["p1"]);
+  }
 
-    private async computePanel2(): Promise<any> {
-        // FIXME(malavv): Panel logic is not implemented
-        return Promise.resolve(this.mock['p2']);
-    }
+  private async computePanel2(): Promise<any> {
+    // FIXME(malavv): Panel logic is not implemented
+    return Promise.resolve(this.mock["p2"]);
+  }
 
-    private async computePanel3(): Promise<any> {
-        // FIXME(malavv): Panel logic is not implemented
-        return Promise.resolve(this.mock['p3']);
-    }
+  private async computePanel3(): Promise<any> {
+    // FIXME(malavv): Panel logic is not implemented
+    return Promise.resolve(this.mock["p3"]);
+  }
 
-    private async computePanel4(): Promise<any> {
-        // FIXME(malavv): Panel logic is not implemented
-        return Promise.resolve(this.mock['p4']);
-    }
+  private async computePanel4(): Promise<any> {
+    // FIXME(malavv): Panel logic is not implemented
+    return Promise.resolve(this.mock["p4"]);
+  }
 
-    private async computePanel5(): Promise<any> {
-        // FIXME(malavv): Panel logic is not implemented
-        return Promise.resolve(this.mock['p5']);
-    }
+  private async computePanel5(): Promise<any> {
+    // FIXME(malavv): Panel logic is not implemented
+    return Promise.resolve(this.mock["p5"]);
+  }
 
-    private async computePanel6(): Promise<any> {
-        // FIXME(malavv): Panel logic is not implemented
-        return Promise.resolve(this.mock['p6']);
-    }
+  private async computePanel6(): Promise<any> {
+    // FIXME(malavv): Panel logic is not implemented
+    return Promise.resolve(this.mock["p6"]);
+  }
 
-    private async computePanel7(): Promise<any> {
-        // FIXME(malavv): Panel logic is not implemented
-        return Promise.resolve(this.mock['p7']);
-    }
+  private async computePanel7(): Promise<any> {
+    // FIXME(malavv): Panel logic is not implemented
+    return Promise.resolve(this.mock["p7"]);
+  }
 
-    private async computePanel8(): Promise<any> {
-        // FIXME(malavv): Panel logic is not implemented
-        return Promise.resolve(this.mock['p8']);
-    }
+  private async computePanel8(): Promise<any> {
+    // FIXME(malavv): Panel logic is not implemented
+    return Promise.resolve(this.mock["p8"]);
+  }
 
-    private async computePanel9(): Promise<any> {
-        // FIXME(malavv): Panel logic is not implemented
-        return Promise.resolve(this.mock['p9']);
-    }
+  private async computePanel9(): Promise<any> {
+    // FIXME(malavv): Panel logic is not implemented
+    return Promise.resolve(this.mock["p9"]);
+  }
 
-    private async computePanel10(): Promise<any> {
-        // FIXME(malavv): Panel logic is not implemented
-        return Promise.resolve(this.mock['p10']);
-    }
+  private async computePanel10(): Promise<any> {
+    // FIXME(malavv): Panel logic is not implemented
+    return Promise.resolve(this.mock["p10"]);
+  }
 
-    private async computePanel11(): Promise<any> {
-        // FIXME(malavv): Panel logic is not implemented
-        return Promise.resolve(this.mock['p11']);
-    }
+  private async computePanel11(): Promise<any> {
+    // FIXME(malavv): Panel logic is not implemented
+    return Promise.resolve(this.mock["p11"]);
+  }
 
-    private async computePanel12(): Promise<any> {
-        // FIXME(malavv): Panel logic is not implemented
-        return Promise.resolve(this.mock['p12']);
-    }
+  private async computePanel12(): Promise<any> {
+    // FIXME(malavv): Panel logic is not implemented
+    return Promise.resolve(this.mock["p12"]);
+  }
 
-    /**
-     * Get from cache or compute and cache.
-     * @param key Cache key
-     * @param factory Compute function
-     * @private
-     */
-    private getOrCompute(key: string, factory: () => Promise<any>): Promise<any> {
-        // @ts-ignore
-        const cached = this.app.get(key);
-        if (cached !== undefined)
-            return Promise.resolve(cached);
+  /**
+   * Get from cache or compute and cache.
+   * @param key Cache key
+   * @param factory Compute function
+   * @private
+   */
+  private getOrCompute(key: string, factory: () => Promise<any>): Promise<any> {
+    // @ts-ignore
+    const cached = this.app.get(key);
+    if (cached !== undefined) return Promise.resolve(cached);
 
-        return factory().then(data => {
-            // @ts-ignore
-            this.app.set(key, data)
-            return data;
-        });
-    }
+    return factory().then((data) => {
+      // @ts-ignore
+      this.app.set(key, data);
+      return data;
+    });
+  }
 }
-

@@ -9,141 +9,141 @@ metadata:
     iconClass: icon-nodejs
     tags: coda
 objects:
-- apiVersion: v1
-  kind: Secret
-  metadata:
-    name: ${CODA_HUB_DASH_BACK}-kc-identifiers
-    labels:
-      application: ${CODA_HUB_DASH_BACK}
-  type: Opaque
-  stringData:
-    secret: ${CODA_DASHBOARD_API_AUTH_CLIENT_SECRET}
-- apiVersion: v1
-  kind: Secret
-  metadata:
-    name: ${CODA_HUB_DASH_BACK}-kc-sessions
-    labels:
-      application: ${CODA_HUB_DASH_BACK}
-  type: Opaque
-  stringData:
-    secret: ${CODA_DASHBOARD_API_AUTH_SESSION_MEMORY_SECRET}
-- apiVersion: v1
-  kind: Service
-  metadata:
-    annotations:
-      openshift.io/generated-by: OpenShiftWebConsole
-    creationTimestamp: null
-    labels:
-      app: ${CODA_HUB_DASH_BACK}
-    name: ${CODA_HUB_DASH_BACK}
-  spec:
-    ports:
-    - name: 8080-tcp
-      port: 8080
-      protocol: TCP
-      targetPort: 3000
-    selector:
-      deploymentconfig: ${CODA_HUB_DASH_BACK}
-    sessionAffinity: None
-    type: ClusterIP
-- apiVersion: v1
-  kind: Route
-  metadata:
-    labels:
-      app: ${CODA_HUB_DASH_BACK}
-    annotations:
-      description: Route pour coda-hub-api
-      haproxy.router.openshift.io/timeout: 90s
-    name: ${CODA_HUB_DASH_BACK}
-  spec:
-    host: '${CODA_HUB_DASH_BACK_FQDN}'
-    port:
-      targetPort: 8080-tcp
-    tls:
-      termination: edge
-    to:
-      kind: Service
+  - apiVersion: v1
+    kind: Secret
+    metadata:
+      name: ${CODA_HUB_DASH_BACK}-kc-identifiers
+      labels:
+        application: ${CODA_HUB_DASH_BACK}
+    type: Opaque
+    stringData:
+      secret: ${CODA_DASHBOARD_API_AUTH_CLIENT_SECRET}
+  - apiVersion: v1
+    kind: Secret
+    metadata:
+      name: ${CODA_HUB_DASH_BACK}-kc-sessions
+      labels:
+        application: ${CODA_HUB_DASH_BACK}
+    type: Opaque
+    stringData:
+      secret: ${CODA_DASHBOARD_API_AUTH_SESSION_MEMORY_SECRET}
+  - apiVersion: v1
+    kind: Service
+    metadata:
+      annotations:
+        openshift.io/generated-by: OpenShiftWebConsole
+      creationTimestamp: null
+      labels:
+        app: ${CODA_HUB_DASH_BACK}
       name: ${CODA_HUB_DASH_BACK}
-      weight: 100
-    wildcardPolicy: None
-- apiVersion: v1
-  kind: DeploymentConfig
-  metadata:
-    annotations:
-      openshift.io/generated-by: OpenShiftWebConsole
-    labels:
-      app: ${CODA_HUB_DASH_BACK}
-    name: ${CODA_HUB_DASH_BACK}
-  spec:
-    replicas: 1
-    selector:
-      app: ${CODA_HUB_DASH_BACK}
-      deploymentconfig: ${CODA_HUB_DASH_BACK}
-    strategy:
-      type: Rolling
-    template:
-      metadata:
-        labels:
-          app: ${CODA_HUB_DASH_BACK}
-          deploymentconfig: ${CODA_HUB_DASH_BACK}
-      spec:
-        containers:
-          - env:
-            - name: CODA_HUB_API_URL
-              value: '${CODA_HUB_API_URL}'
-            - name: CODA_AUTH_SERVICE_URL
-              value: '${CODA_AUTH_SERVICE_URL}'
-            - name: CODA_DASHBOARD_API_AUTH_REALM
-              value: '${CODA_DASHBOARD_API_AUTH_REALM}'
-            - name: CODA_DASHBOARD_API_AUTH_CLIENT_SECRET
-              valueFrom:
+    spec:
+      ports:
+        - name: 8080-tcp
+          port: 8080
+          protocol: TCP
+          targetPort: 3000
+      selector:
+        deploymentconfig: ${CODA_HUB_DASH_BACK}
+      sessionAffinity: None
+      type: ClusterIP
+  - apiVersion: v1
+    kind: Route
+    metadata:
+      labels:
+        app: ${CODA_HUB_DASH_BACK}
+      annotations:
+        description: Route pour coda-hub-api
+        haproxy.router.openshift.io/timeout: 90s
+      name: ${CODA_HUB_DASH_BACK}
+    spec:
+      host: "${CODA_HUB_DASH_BACK_FQDN}"
+      port:
+        targetPort: 8080-tcp
+      tls:
+        termination: edge
+      to:
+        kind: Service
+        name: ${CODA_HUB_DASH_BACK}
+        weight: 100
+      wildcardPolicy: None
+  - apiVersion: v1
+    kind: DeploymentConfig
+    metadata:
+      annotations:
+        openshift.io/generated-by: OpenShiftWebConsole
+      labels:
+        app: ${CODA_HUB_DASH_BACK}
+      name: ${CODA_HUB_DASH_BACK}
+    spec:
+      replicas: 1
+      selector:
+        app: ${CODA_HUB_DASH_BACK}
+        deploymentconfig: ${CODA_HUB_DASH_BACK}
+      strategy:
+        type: Rolling
+      template:
+        metadata:
+          labels:
+            app: ${CODA_HUB_DASH_BACK}
+            deploymentconfig: ${CODA_HUB_DASH_BACK}
+        spec:
+          containers:
+            - env:
+                - name: CODA_HUB_API_URL
+                  value: "${CODA_HUB_API_URL}"
+                - name: CODA_AUTH_SERVICE_URL
+                  value: "${CODA_AUTH_SERVICE_URL}"
+                - name: CODA_DASHBOARD_API_AUTH_REALM
+                  value: "${CODA_DASHBOARD_API_AUTH_REALM}"
+                - name: CODA_DASHBOARD_API_AUTH_CLIENT_SECRET
+                  valueFrom:
                     secretKeyRef:
                       key: secret
                       name: ${CODA_HUB_DASH_BACK}-kc-identifiers
-            - name: CODA_DASHBOARD_API_AUTH_SESSION_MEMORY_SECRET
-              valueFrom:
+                - name: CODA_DASHBOARD_API_AUTH_SESSION_MEMORY_SECRET
+                  valueFrom:
                     secretKeyRef:
                       key: secret
                       name: ${CODA_HUB_DASH_BACK}-kc-sessions
-            name: ${CODA_HUB_DASH_BACK}
-            image: coda/coda-hub-dashboard-back:latest
-            ports:
-              - name: ${CODA_HUB_DASH_BACK}
-                containerPort: 8080
-            securityContext:
+              name: ${CODA_HUB_DASH_BACK}
+              image: coda/coda-hub-dashboard-back:latest
+              ports:
+                - name: ${CODA_HUB_DASH_BACK}
+                  containerPort: 8080
+              securityContext:
                 runAsUser: 1000
-        serviceAccount: coda-builder
-        serviceAccountName: coda-builder
-    triggers:
-    - type: ConfigChange
+          serviceAccount: coda-builder
+          serviceAccountName: coda-builder
+      triggers:
+        - type: ConfigChange
 parameters:
-- displayName: Nom des objects OpenShift
-  name: CODA_HUB_DASH_BACK
-  value: coda-hub-back
-  required: true
-- name: CODA_HUB_DASH_BACK_FQDN
-  displayName: Custom https Route Hostname
-  description: >-
-    Custom hostname for https service route. Leave blank for default hostname,
-    e.g.: <application-name>-<namespace>.<default-domain-suffix>
-  value: dashboard-api.hub.coda.com
-- name: CODA_HUB_API_URL
-  displayName: HUB API URL
-  description: 'Hub API URL'
-  required: true
-- name: CODA_AUTH_SERVICE_URL
-  displayName: AUTH SERVICE URL
-  description: 'Auth service URL'
-  required: true
-- name: CODA_DASHBOARD_API_AUTH_REALM
-  displayName: AUTH REALM
-  description: 'Auth realm'
-  required: true
-- name: CODA_DASHBOARD_API_AUTH_CLIENT_SECRET
-  displayName: AUTH CLIENT SECRET
-  description: 'Auth client secret'
-  required: true
-- name: CODA_DASHBOARD_API_AUTH_SESSION_MEMORY_SECRET
-  displayName: AUTH SESSION MEMORY SECRET
-  description: 'Auth session memory secret'
-  required: true
+  - displayName: Nom des objects OpenShift
+    name: CODA_HUB_DASH_BACK
+    value: coda-hub-back
+    required: true
+  - name: CODA_HUB_DASH_BACK_FQDN
+    displayName: Custom https Route Hostname
+    description: >-
+      Custom hostname for https service route. Leave blank for default hostname,
+      e.g.: <application-name>-<namespace>.<default-domain-suffix>
+    value: dashboard-api.hub.coda.com
+  - name: CODA_HUB_API_URL
+    displayName: HUB API URL
+    description: "Hub API URL"
+    required: true
+  - name: CODA_AUTH_SERVICE_URL
+    displayName: AUTH SERVICE URL
+    description: "Auth service URL"
+    required: true
+  - name: CODA_DASHBOARD_API_AUTH_REALM
+    displayName: AUTH REALM
+    description: "Auth realm"
+    required: true
+  - name: CODA_DASHBOARD_API_AUTH_CLIENT_SECRET
+    displayName: AUTH CLIENT SECRET
+    description: "Auth client secret"
+    required: true
+  - name: CODA_DASHBOARD_API_AUTH_SESSION_MEMORY_SECRET
+    displayName: AUTH SESSION MEMORY SECRET
+    description: "Auth session memory secret"
+    required: true

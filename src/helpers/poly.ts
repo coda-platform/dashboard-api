@@ -1,5 +1,5 @@
 import fs from "fs";
-import {number} from "joi";
+import { number } from "joi";
 
 /**
  * Get random integer in [min, max)
@@ -7,17 +7,17 @@ import {number} from "joi";
  * @param max Exclusive Maximum
  */
 export function getRandomInt(min: number, max: number) {
-    min = Math.ceil(min);
-    max = Math.floor(max);
-    return Math.floor(Math.random() * (max - min) + min); //The maximum is exclusive and the minimum is inclusive
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min) + min); //The maximum is exclusive and the minimum is inclusive
 }
 
 /**
  * Generic cache type (should match Express app)
  */
 export interface AppCache {
-    get(key: string): any;
-    set(key: string, data: any): void;
+  get(key: string): any;
+  set(key: string, data: any): void;
 }
 
 /**
@@ -25,13 +25,13 @@ export interface AppCache {
  * @param app Express app.
  * @param path Path to the file.
  */
-export function getCachedFile(app: AppCache, path: string) : string {
-    let txt = app.get(path);
-    if (txt === undefined) {
-        txt = fs.readFileSync(path);
-        app.set(path, txt);
-    }
-    return txt;
+export function getCachedFile(app: AppCache, path: string): string {
+  let txt = app.get(path);
+  if (txt === undefined) {
+    txt = fs.readFileSync(path);
+    app.set(path, txt);
+  }
+  return txt;
 }
 
 /**
@@ -39,19 +39,21 @@ export function getCachedFile(app: AppCache, path: string) : string {
  * @param lhs Set
  * @param rhs Set
  */
-export function isSetsEquals(lhs: Set<any>, rhs: Set<any>) : boolean {
-    return lhs.size === rhs.size && [...lhs].every(value => rhs.has(value));
+export function isSetsEquals(lhs: Set<any>, rhs: Set<any>): boolean {
+  return lhs.size === rhs.size && [...lhs].every((value) => rhs.has(value));
 }
 
 /**
  * Kind of polyfill while waiting for Object.fromEntries()
  * @param itr Iterable
  */
-export function ObjectFromEntries(itr: Iterable<[string, any]>) : {[key:string]: any} {
-    let res: {[key:string]: any} = {};
-    for (const el of [...itr]) {
-        let [k, v] = el;
-        res[k] = v;
-    }
-    return res;
+export function ObjectFromEntries(itr: Iterable<[string, any]>): {
+  [key: string]: any;
+} {
+  let res: { [key: string]: any } = {};
+  for (const el of [...itr]) {
+    let [k, v] = el;
+    res[k] = v;
+  }
+  return res;
 }
