@@ -14,21 +14,13 @@ router.post("/prepare", async function (req: Request, res: Response) {
   const sitesTxt = queryParamString(req, "sites");
   const sites = sitesTxt === undefined ? sitesTxt : sitesTxt.split(",");
 
-  const payloadTxt = queryParamString(req, "payload");
-  if (payloadTxt === undefined) {
-    res.status(400).send("Invalid payload for prepare query");
-    return;
-  }
-  const payload = JSON.parse(Buffer.from(payloadTxt, "base64").toString());
-  console.log('Payload: ', payload)
-
+  const body = req.body;
   const sitesProxy = new Sites(req);
   let data = null;
   try {
-    data = await sitesProxy.prepare(payload, sites);
+    data = await sitesProxy.prepare(body, sites);
   } catch (err) {
-    const error = err as Error
-    console.error(error.stack);
+    console.error(err.stack);
     res.status(500).send("Unable to run prepare query on hub.");
   }
   res.status(200).send(data);
@@ -38,21 +30,13 @@ router.post("/train", async function (req: Request, res: Response) {
   const sitesTxt = queryParamString(req, "sites");
   const sites = sitesTxt === undefined ? sitesTxt : sitesTxt.split(",");
 
-  const payloadTxt = queryParamString(req, "payload");
-  if (payloadTxt === undefined) {
-    res.status(400).send("Invalid payload for train query");
-    return;
-  }
-  const payload = JSON.parse(Buffer.from(payloadTxt, "base64").toString());
-  console.log('Payload: ', payload)
-
+  const body = req.body;
   const sitesProxy = new Sites(req);
   let data = null;
   try {
-    data = await sitesProxy.train(payload, sites);
+    data = await sitesProxy.train(body, sites);
   } catch (err) {
-    const error = err as Error
-    console.error(error.stack);
+    console.error(err.stack);
     res.status(500).send("Unable to run train query on hub.");
   }
   res.status(200).send(data);
@@ -62,21 +46,13 @@ router.post("/progress", async function (req: Request, res: Response) {
   const sitesTxt = queryParamString(req, "sites");
   const sites = sitesTxt === undefined ? sitesTxt : sitesTxt.split(",");
 
-  const payloadTxt = queryParamString(req, "payload");
-  if (payloadTxt === undefined) {
-    res.status(400).send("Invalid payload for train query");
-    return;
-  }
-  const payload = JSON.parse(Buffer.from(payloadTxt, "base64").toString());
-  console.log('Payload: ', payload)
-
+  const body = req.body;
   const sitesProxy = new Sites(req);
   let data = null;
   try {
-    data = await sitesProxy.progress(payload, sites);
+    data = await sitesProxy.progress(body, sites);
   } catch (err) {
-    const error = err as Error
-    console.error(error.stack);
+    console.error(err.stack);
     res.status(500).send("Unable to run progress query on hub.");
   }
   res.status(200).send(data);
@@ -86,21 +62,13 @@ router.post("/evaluate", async function (req: Request, res: Response) {
   const sitesTxt = queryParamString(req, "sites");
   const sites = sitesTxt === undefined ? sitesTxt : sitesTxt.split(",");
 
-  const payloadTxt = queryParamString(req, "payload");
-  if (payloadTxt === undefined) {
-    res.status(400).send("Invalid payload for evaluate query");
-    return;
-  }
-  const payload = JSON.parse(Buffer.from(payloadTxt, "base64").toString());
-  console.log('Payload: ', payload)
-
+  const body = req.body;
   const sitesProxy = new Sites(req);
   let data = null;
   try {
-    data = await sitesProxy.evaluate(payload, sites);
+    data = await sitesProxy.evaluate(body, sites);
   } catch (err) {
-    const error = err as Error
-    console.error(error.stack);
+    console.error(err.stack);
     res.status(500).send("Unable to run evaluate query on hub.");
   }
   res.status(200).send(data);
