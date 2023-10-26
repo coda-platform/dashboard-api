@@ -447,6 +447,7 @@ export class Sites {
     if (sitesCodes === undefined || !Array.isArray(sitesCodes))
       return Promise.reject(new Error("Invalid sites"));
 
+    console.log(request)
     const data = { ...{ data: request }, ...passAuth(this.req) };
 
     try {
