@@ -3,7 +3,6 @@ import * as dotenv from "dotenv";
 dotenv.config();
 
 import express from "express";
-
 import KeycloakFactory from "./auth/keycloak-factory";
 
 import CorsMiddleware from "./middleware/CorsMiddleware";
@@ -16,6 +15,13 @@ import learningRouter from "./routes/learning";
 import version from "./utils/version";
 
 const app = express();
+
+// Replaces body-parser, which is deprecated
+app.use(express.json());
+app.use(express.urlencoded({
+  extended: true
+}));
+
 CorsMiddleware.register(app);
 
 const port = process.env.PORT || 3000;
