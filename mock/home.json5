@@ -1,18 +1,18 @@
 {
   // First Row
   p1: {
-    total_count: 800000, // Total number of "participants" in our cohort
+    total_count: 1115278, // Total number of "participants" in our cohort
     prevalence: 0.04, // fraction of the cohort that is COVID-19 positive
   },
   p2: {
     date: "2021-03-15", // Latest day for which we have available case data
-    new_cases: 669, // Number of new members of this cohort that were COVID-19 positive
+    new_cases: 347, // Number of new members of this cohort that were COVID-19 positive
     sma_7d: 943, // 7d moving average over the day prior to "date"
     exp_rate_7d: 0.92, // Instantaneous Exponential Rate based on the last 7 day.
   },
   p3: {
     date: "2021-03-15", // Latest day for which we have available death data
-    new_cases: 7, // Number of new members of this cohort that were COVID-19 positive and died
+    new_cases: 9, // Number of new members of this cohort that were COVID-19 positive and died
     sma_7d: 11, // 7d moving average over the day prior to "date"
     exp_rate_7d: 0.86, // Instantaneous Exponential Rate based on the last 7 day.
   },
