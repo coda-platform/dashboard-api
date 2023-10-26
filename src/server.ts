@@ -18,9 +18,6 @@ import version from "./utils/version";
 const app = express();
 CorsMiddleware.register(app);
 
-const runningOnLocalhost =
-  window.location.href.slice(0, 17) == "http://localhost:";
-
 const port = process.env.PORT || 3000;
 app.set("port", port);
 const server = app.listen(app.get("port"), () => {
@@ -35,18 +32,9 @@ const server = app.listen(app.get("port"), () => {
 const keycloak = KeycloakFactory.get(app);
 app.use(keycloak.middleware());
 
-if (runningOnLocalhost) {
-  app.use("/", indexRouter);
-  app.use("/sites", sitesRouter);
-  app.use("/home", homeRouter);
-  app.use("/api", apiRouter);
-  app.use("/stats", statsRouter);
-  app.use("/learning", learningRouter);
-} else {
-  app.use("/", indexRouter);
-  app.use("/sites", keycloak.protect(), sitesRouter);
-  app.use("/home", keycloak.protect(), homeRouter);
-  app.use("/api", keycloak.protect(), apiRouter);
-  app.use("/stats", keycloak.protect(), statsRouter);
-  app.use("/learning", keycloak.protect(), learningRouter);
-}
+app.use("/", indexRouter);
+app.use("/sites", keycloak.protect(), sitesRouter);
+app.use("/home", keycloak.protect(), homeRouter);
+app.use("/api", keycloak.protect(), apiRouter);
+app.use("/stats", keycloak.protect(), statsRouter);
+app.use("/learning", keycloak.protect(), learningRouter);
