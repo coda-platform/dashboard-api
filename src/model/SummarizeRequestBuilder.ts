@@ -66,7 +66,7 @@ export class SRSBld {
     return this;
   }
   filterIs(path: string, value: string): SRSBld {
-    this.selector.filters.push({ path: path, operator: "is", value: value });
+    this.selector.filters.push({ path: path, operator: "is", value: value, type: "string" });
     return this;
   }
 
@@ -88,6 +88,7 @@ export class SRSBld {
       path: path,
       operator: operator,
       value: format(date, "yyyy-MM-dd"),
+      type: "dateTime"
     });
     return this;
   }

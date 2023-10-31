@@ -110,7 +110,7 @@ objects:
                       key: secret
                       name: ${CODA_HUB_DASH_BACK}-kc-sessions
               name: ${CODA_HUB_DASH_BACK}
-              image: coda19/coda-hub-dashboard-back:latest
+              image: coda19/coda-hub-dashboard-back:dev
               ports:
                 - name: ${CODA_HUB_DASH_BACK}
                   containerPort: 8080
@@ -130,7 +130,7 @@ parameters:
     description: >-
       Custom hostname for https service route. Leave blank for default hostname,
       e.g.: <application-name>-<namespace>.<default-domain-suffix>
-    value: dashboard-backend.hub.coda-platform.com
+    value: dashboard-backend-dev.hub.coda-platform.com
   - name: CODA_HUB_API_URL
     displayName: HUB API URL
     description: "Hub API URL"
